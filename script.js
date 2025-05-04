@@ -136,9 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Countdown Timer
 document.addEventListener('DOMContentLoaded', () => {
-    // Set the date we're counting down to (30 days from now)
+    // Set the date we're counting down to (15 days from now)
     const countDownDate = new Date();
-    countDownDate.setDate(countDownDate.getDate() + 30);
+    countDownDate.setDate(countDownDate.getDate() + 15);
 
     // Get countdown elements
     const daysElement = document.getElementById('days');
@@ -166,13 +166,9 @@ document.addEventListener('DOMContentLoaded', () => {
         minutesElement.textContent = padZero(minutes);
         secondsElement.textContent = padZero(seconds);
         
-        // If the countdown is finished, clear the interval
+        // If the countdown is finished, reset to 30 days
         if (distance < 0) {
-            clearInterval(countdownInterval);
-            daysElement.textContent = '00';
-            hoursElement.textContent = '00';
-            minutesElement.textContent = '00';
-            secondsElement.textContent = '00';
+            countDownDate.setDate(countDownDate.getDate() + 15);
         }
     }, 1000);
 
