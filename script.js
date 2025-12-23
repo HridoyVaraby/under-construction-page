@@ -1,242 +1,274 @@
-// Add loading animation
+/**
+ * Under Construction Page - Main JavaScript
+ * Features: Loading animation, particles.js, countdown timer, form handling
+ */
+
+// ============================================
+// Loading Animation
+// ============================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Create loading animation
-    const loadingAnimation = document.createElement('div');
-    loadingAnimation.className = 'loading-animation';
-    
-    const spinner = document.createElement('div');
-    spinner.className = 'spinner';
-    
-    loadingAnimation.appendChild(spinner);
-    document.body.appendChild(loadingAnimation);
-    
-    // Remove loading animation after page is loaded
+    const loadingAnimation = document.getElementById('loading-animation');
+
     window.addEventListener('load', () => {
         setTimeout(() => {
             loadingAnimation.style.opacity = '0';
-            loadingAnimation.style.visibility = 'hidden';
-            
             setTimeout(() => {
-                loadingAnimation.remove();
+                loadingAnimation.style.display = 'none';
             }, 500);
-        }, 1000);
+        }, 800);
     });
+
+    // Set current year in footer
+    document.getElementById('current-year').textContent = new Date().getFullYear();
 });
 
-// Initialize particles.js
+// ============================================
+// Particle.js Configuration
+// ============================================
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof particlesJS !== 'undefined') {
         particlesJS('particles-js', {
-            "particles": {
-                "number": {
-                    "value": 80,
-                    "density": {
-                        "enable": true,
-                        "value_area": 800
+            particles: {
+                number: {
+                    value: 60,
+                    density: {
+                        enable: true,
+                        value_area: 800
                     }
                 },
-                "color": {
-                    "value": "#ffffff"
+                color: {
+                    value: ['#5e72eb', '#ff77eb', '#ffffff']
                 },
-                "shape": {
-                    "type": "circle",
-                    "stroke": {
-                        "width": 0,
-                        "color": "#000000"
-                    },
-                    "polygon": {
-                        "nb_sides": 5
+                shape: {
+                    type: 'circle'
+                },
+                opacity: {
+                    value: 0.6,
+                    random: true,
+                    anim: {
+                        enable: true,
+                        speed: 1,
+                        opacity_min: 0.2,
+                        sync: false
                     }
                 },
-                "opacity": {
-                    "value": 0.5,
-                    "random": true,
-                    "anim": {
-                        "enable": true,
-                        "speed": 1,
-                        "opacity_min": 0.1,
-                        "sync": false
+                size: {
+                    value: 3,
+                    random: true,
+                    anim: {
+                        enable: true,
+                        speed: 2,
+                        size_min: 0.1,
+                        sync: false
                     }
                 },
-                "size": {
-                    "value": 3,
-                    "random": true,
-                    "anim": {
-                        "enable": true,
-                        "speed": 2,
-                        "size_min": 0.1,
-                        "sync": false
-                    }
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#5e72eb',
+                    opacity: 0.3,
+                    width: 1
                 },
-                "line_linked": {
-                    "enable": true,
-                    "distance": 150,
-                    "color": "#5e72eb",
-                    "opacity": 0.4,
-                    "width": 1
-                },
-                "move": {
-                    "enable": true,
-                    "speed": 1,
-                    "direction": "none",
-                    "random": true,
-                    "straight": false,
-                    "out_mode": "out",
-                    "bounce": false,
-                    "attract": {
-                        "enable": false,
-                        "rotateX": 600,
-                        "rotateY": 1200
-                    }
+                move: {
+                    enable: true,
+                    speed: 1,
+                    direction: 'none',
+                    random: true,
+                    out_mode: 'out'
                 }
             },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": {
-                    "onhover": {
-                        "enable": true,
-                        "mode": "grab"
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: 'grab'
                     },
-                    "onclick": {
-                        "enable": true,
-                        "mode": "push"
+                    onclick: {
+                        enable: true,
+                        mode: 'push'
                     },
-                    "resize": true
+                    resize: true
                 },
-                "modes": {
-                    "grab": {
-                        "distance": 140,
-                        "line_linked": {
-                            "opacity": 1
+                modes: {
+                    grab: {
+                        distance: 140,
+                        line_linked: {
+                            opacity: 0.8
                         }
                     },
-                    "bubble": {
-                        "distance": 400,
-                        "size": 40,
-                        "duration": 2,
-                        "opacity": 8,
-                        "speed": 3
-                    },
-                    "repulse": {
-                        "distance": 200,
-                        "duration": 0.4
-                    },
-                    "push": {
-                        "particles_nb": 4
-                    },
-                    "remove": {
-                        "particles_nb": 2
+                    push: {
+                        particles_nb: 4
                     }
                 }
             },
-            "retina_detect": true
+            retina_detect: true
         });
     }
 });
 
+// ============================================
 // Countdown Timer
+// ============================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Set the date we're counting down to (15 days from now)
+    // Set countdown to 15 days from now
     const countDownDate = new Date();
     countDownDate.setDate(countDownDate.getDate() + 15);
 
-    // Get countdown elements
-    const daysElement = document.getElementById('days');
-    const hoursElement = document.getElementById('hours');
-    const minutesElement = document.getElementById('minutes');
-    const secondsElement = document.getElementById('seconds');
+    const elements = {
+        days: document.getElementById('days'),
+        hours: document.getElementById('hours'),
+        minutes: document.getElementById('minutes'),
+        seconds: document.getElementById('seconds')
+    };
 
-    // Update the countdown every 1 second
     const countdownInterval = setInterval(() => {
-        // Get current date and time
         const now = new Date().getTime();
-        
-        // Calculate the remaining time
         const distance = countDownDate - now;
-        
-        // Calculations for days, hours, minutes and seconds
+
+        // Calculate time components
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        
-        // Display the result
-        daysElement.textContent = padZero(days);
-        hoursElement.textContent = padZero(hours);
-        minutesElement.textContent = padZero(minutes);
-        secondsElement.textContent = padZero(seconds);
-        
-        // If the countdown is finished, reset to 30 days
+
+        // Update display with leading zeros
+        elements.days.textContent = padZero(days);
+        elements.hours.textContent = padZero(hours);
+        elements.minutes.textContent = padZero(minutes);
+        elements.seconds.textContent = padZero(seconds);
+
+        // Reset countdown when it reaches zero
         if (distance < 0) {
             countDownDate.setDate(countDownDate.getDate() + 15);
         }
     }, 1000);
 
-    // Function to add leading zero
     function padZero(num) {
         return num.toString().padStart(2, '0');
     }
 });
 
-// Handle form submission
+// ============================================
+// Email Subscribe Form
+// ============================================
 document.addEventListener('DOMContentLoaded', () => {
-    const subscribeForm = document.querySelector('.subscribe-form');
-    const emailInput = subscribeForm.querySelector('input[type="email"]');
-    
-    subscribeForm.addEventListener('submit', (e) => {
+    const form = document.getElementById('subscribe-form');
+    const emailInput = document.getElementById('email-input');
+    const formMessage = document.getElementById('form-message');
+
+    form.addEventListener('submit', (e) => {
         e.preventDefault();
-        
-        if (emailInput.value.trim() === '') {
-            // Shake animation for invalid input
-            emailInput.style.animation = 'shake 0.5s';
-            setTimeout(() => {
-                emailInput.style.animation = '';
-            }, 500);
+
+        const email = emailInput.value.trim();
+
+        // Validate email
+        if (!email || !isValidEmail(email)) {
+            shakeInput(emailInput);
+            showMessage('Please enter a valid email address', 'error');
             return;
         }
-        
-        // Success animation
-        subscribeForm.innerHTML = '<div style="color: #5e72eb; font-weight: 600; padding: 1.2rem;">Thank you! We\'ll notify you when we launch.</div>';
+
+        // Simulate success
+        showMessage('Thank you! We\'ll notify you when we launch.', 'success');
+
+        // Clear input
+        emailInput.value = '';
+
+        // Disable form temporarily
+        const button = form.querySelector('button');
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-check"></i> <span>Subscribed!</span>';
+
+        setTimeout(() => {
+            button.disabled = false;
+            button.innerHTML = `<span class="relative z-10 flex items-center gap-2">
+                <span>Notify Me</span>
+                <i class="fas fa-paper-plane text-sm group-hover:translate-x-1 transition-transform"></i>
+            </span>
+            <div class="absolute inset-0 bg-gradient-to-r from-accent to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>`;
+            formMessage.classList.add('hidden');
+        }, 3000);
     });
-});
 
-// Add shake animation
-const style = document.createElement('style');
-style.textContent = `
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-    20%, 40%, 60%, 80% { transform: translateX(5px); }
-}`;
-document.head.appendChild(style);
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
 
-// Add scroll reveal effect for mobile
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.innerWidth <= 768) {
-        const content = document.querySelector('.content');
-        content.style.height = 'auto';
-        content.style.overflow = 'auto';
-        document.body.style.overflow = 'auto';
-        
-        // Add animation delay to elements
-        const elements = [
-            '.logo', 
-            '.text-container', 
-            '.countdown-container', 
-            '.notify-container', 
-            '.social-links'
-        ];
-        
-        elements.forEach((selector, index) => {
-            const element = document.querySelector(selector);
-            element.style.opacity = '0';
-            element.style.transform = 'translateY(20px)';
-            element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-            
-            setTimeout(() => {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0)';
-            }, 300 + (index * 200));
-        });
+    function shakeInput(input) {
+        input.style.animation = 'none';
+        input.offsetHeight; // Trigger reflow
+        input.style.animation = 'shake 0.5s ease-in-out';
+        input.focus();
+    }
+
+    function showMessage(message, type) {
+        formMessage.textContent = message;
+        formMessage.className = 'text-center mt-4 text-sm animate-fade-in';
+
+        if (type === 'error') {
+            formMessage.classList.add('text-red-400');
+        } else {
+            formMessage.classList.add('text-primary');
+        }
+
+        formMessage.classList.remove('hidden');
     }
 });
+
+// ============================================
+// Shake Animation Keyframes
+// ============================================
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+        20%, 40%, 60%, 80% { transform: translateX(4px); }
+    }
+
+    /* Enhanced animations for countdown cards */
+    .countdown-card {
+        animation: slideUp 0.5s ease-out backwards;
+    }
+
+    .countdown-card:nth-child(1) { animation-delay: 0.1s; }
+    .countdown-card:nth-child(2) { animation-delay: 0.2s; }
+    .countdown-card:nth-child(3) { animation-delay: 0.3s; }
+    .countdown-card:nth-child(4) { animation-delay: 0.4s; }
+
+    /* Gradient animation for highlight text */
+    .gradient-text::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, hsl(250, 70%, 60%) 0%, hsl(330, 80%, 70%) 100%);
+        transform: scaleX(0);
+        transform-origin: bottom right;
+        transition: transform 0.5s ease-out;
+        animation: underlineAnimation 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes underlineAnimation {
+        from { transform: scaleX(0.3); transform-origin: bottom left; }
+        to { transform: scaleX(1); transform-origin: bottom right; }
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+        body {
+            overflow-y: auto;
+        }
+
+        main {
+            min-height: auto;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+    }
+`;
+document.head.appendChild(style);
