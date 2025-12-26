@@ -3,136 +3,722 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coming Soon | Under Construction</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Something Remarkable is Coming</title>
     <link rel="icon" href="construction-icon.webp" type="image/webp">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <meta name="description" content="Our website is under construction. We're working hard to give you the best experience.">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="description" content="We're building something remarkable. Stay tuned.">
+    <style>
+        /* ============================================
+           CSS RESET & BASE
+           ============================================ */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            /* Color Palette - Warm Brutalist */
+            --bg-primary: #0D0D0D;
+            --bg-secondary: #1A1A1A;
+            --text-primary: #FAFAF9;
+            --text-secondary: #A1A1AA;
+            --accent: #FF6B35;
+            --accent-hover: #FF8555;
+            --cream: #F7C59F;
+            --line: rgba(250, 250, 249, 0.1);
+
+            /* Typography */
+            --font-display: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+
+            /* Spacing Scale - 8pt grid */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+            --space-16: 4rem;
+            --space-20: 5rem;
+            --space-24: 6rem;
+
+            /* Transitions */
+            --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+            --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ============================================
+           LOADING SCREEN
+           ============================================ */
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s var(--ease-out), visibility 0.6s;
+        }
+
+        .loading-screen.loaded {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-text {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            overflow: hidden;
+        }
+
+        .loading-text span {
+            display: inline-block;
+            animation: loadReveal 0.8s var(--ease-out) forwards;
+            opacity: 0;
+            transform: translateY(100%);
+        }
+
+        .loading-text span:nth-child(1) { animation-delay: 0.1s; }
+        .loading-text span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-text span:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes loadReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================
+           BACKGROUND ELEMENTS
+           ============================================ */
+        .bg-pattern {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            opacity: 0.4;
+            pointer-events: none;
+            background-image:
+                linear-gradient(var(--line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--line) 1px, transparent 1px);
+            background-size: 80px 80px;
+        }
+
+        .bg-gradient-orb {
+            position: fixed;
+            width: min(600px, 80vw);
+            height: min(600px, 80vw);
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0.08;
+            filter: blur(80px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bg-gradient-orb.top-right {
+            top: -200px;
+            right: -200px;
+        }
+
+        .bg-gradient-orb.bottom-left {
+            bottom: -200px;
+            left: -200px;
+        }
+
+        /* ============================================
+           MAIN LAYOUT
+           ============================================ */
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            padding: var(--space-6);
+        }
+
+        /* ============================================
+           HEADER
+           ============================================ */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-4) 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.125rem;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--bg-primary);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-4);
+            background: var(--bg-secondary);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .status-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* ============================================
+           HERO SECTION
+           ============================================ */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: var(--space-12) 0;
+            position: relative;
+        }
+
+        .hero-label {
+            font-family: var(--font-display);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            margin-bottom: var(--space-4);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .hero-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--line);
+            max-width: 200px;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 12vw, 10rem);
+            font-weight: 800;
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+            margin-bottom: var(--space-8);
+        }
+
+        .hero-title-line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .hero-title-line span {
+            display: block;
+            transform: translateY(100%);
+            opacity: 0;
+            animation: titleReveal 1s var(--ease-out) forwards;
+        }
+
+        .hero-title-line:nth-child(1) span { animation-delay: 0.4s; }
+        .hero-title-line:nth-child(2) span { animation-delay: 0.5s; }
+        .hero-title-line:nth-child(3) span { animation-delay: 0.6s; }
+
+        @keyframes titleReveal {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .hero-title .accent {
+            color: var(--accent);
+        }
+
+        .hero-description {
+            max-width: 480px;
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: var(--space-12);
+            opacity: 0;
+            animation: fadeUp 1s var(--ease-out) 0.8s forwards;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================
+           COUNTDOWN MARQUEE
+           ============================================ */
+        .countdown-section {
+            padding: var(--space-12) 0;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeUp 1s var(--ease-out) 1s forwards;
+        }
+
+        .countdown-label {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-6);
+        }
+
+        .countdown-display {
+            display: flex;
+            gap: var(--space-4) var(--space-8);
+            flex-wrap: wrap;
+            align-items: baseline;
+        }
+
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .countdown-value {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 700;
+            line-height: 0.85;
+            letter-spacing: -0.05em;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .countdown-value.accent {
+            color: var(--accent);
+        }
+
+        .countdown-unit {
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-secondary);
+            margin-top: var(--space-2);
+        }
+
+        .countdown-separator {
+            font-size: clamp(2rem, 6vw, 5rem);
+            color: var(--line);
+            font-weight: 300;
+        }
+
+        /* ============================================
+           EMAIL SUBSCRIBE
+           ============================================ */
+        .subscribe-section {
+            padding: var(--space-16) 0;
+            max-width: 600px;
+        }
+
+        .subscribe-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        .subscribe-label {
+            font-family: var(--font-display);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        @media (min-width: 640px) {
+            .input-group {
+                flex-direction: row;
+            }
+        }
+
+        .email-input {
+            flex: 1;
+            padding: var(--space-4) var(--space-5);
+            background: var(--bg-secondary);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .email-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+        }
+
+        .email-input.error {
+            animation: shake 0.5s ease;
+            border-color: #EF4444;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-4px); }
+            40%, 80% { transform: translateX(4px); }
+        }
+
+        .submit-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            padding: var(--space-4) var(--space-8);
+            background: var(--accent);
+            color: var(--bg-primary);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s var(--ease-out);
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-message {
+            font-size: 0.875rem;
+            margin-top: var(--space-3);
+            min-height: 1.5rem;
+        }
+
+        .form-message.success {
+            color: #22C55E;
+        }
+
+        .form-message.error {
+            color: #EF4444;
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            padding: var(--space-8) 0;
+            border-top: 1px solid var(--line);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+
+        .social-links {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .social-link {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            transition: all 0.3s var(--ease-out);
+        }
+
+        .social-link:hover {
+            background: var(--accent);
+            color: var(--bg-primary);
+            transform: translateY(-4px);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* ============================================
+           RESPONSIVE ADJUSTMENTS
+           ============================================ */
+        @media (max-width: 640px) {
+            .page-wrapper {
+                padding: var(--space-4);
+            }
+
+            .hero {
+                padding: var(--space-8) 0;
+            }
+
+            .countdown-section {
+                padding: var(--space-8) 0;
+            }
+
+            .subscribe-section {
+                padding: var(--space-8) 0;
+            }
+
+            .countdown-separator {
+                display: none;
+            }
+        }
+
+        /* ============================================
+           REDUCED MOTION
+           ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .loading-text span,
+            .hero-title-line span,
+            .hero-description,
+            .countdown-section {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        /* ============================================
+           UTILITY CLASSES
+           ============================================ */
+        .hidden {
+            display: none !important;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
 </head>
 <body>
-    <!-- Particle Background -->
-    <div class="particle-container">
-        <div id="particles-js"></div>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-text">
+            <span>BUILD</span><span>ING</span><span>.</span>
+        </div>
     </div>
-    <div class="overlay"></div>
+
+    <!-- Background Elements -->
+    <div class="bg-pattern" aria-hidden="true"></div>
+    <div class="bg-gradient-orb top-right" aria-hidden="true"></div>
+    <div class="bg-gradient-orb bottom-left" aria-hidden="true"></div>
 
     <!-- Main Content -->
-    <main class="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-12 animate-fade-in">
-        <div class="w-full max-w-4xl mx-auto space-y-12">
-
-            <!-- Header / Logo -->
-            <header class="text-center space-y-4 animate-slide-up">
-                <div class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-4">
-                    <div class="relative">
-                        <img src="construction-icon.webp" alt="Construction Icon" width="32" height="32" class="animate-float">
-                        <div class="absolute inset-0 bg-primary/20 blur-xl rounded-full"></div>
-                    </div>
-                    <span class="font-display font-bold text-lg tracking-wide">Under Construction</span>
+    <div class="page-wrapper">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
                 </div>
-            </header>
+                <span>VARABIT</span>
+            </div>
+            <div class="status-badge">In Progress</div>
+        </header>
 
-            <!-- Hero Section -->
-            <section class="text-center space-y-6 animate-slide-up" style="animation-delay: 0.1s">
-                <h1 class="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight">
-                    We're <span class="gradient-text relative inline-block">Coming Soon</span>
-                </h1>
-                <p class="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-                    Our website is under construction. We're working hard to give you the best experience with our new website.
-                </p>
+        <!-- Hero Section -->
+        <main class="hero">
+            <div class="hero-label">
+                <span>Est. 2025</span>
+            </div>
+            <h1 class="hero-title">
+                <span class="hero-title-line"><span>Some</span></span>
+                <span class="hero-title-line"><span><span class="accent">thing</span></span></span>
+                <span class="hero-title-line"><span>Remarkable</span></span>
+            </h1>
+            <p class="hero-description">
+                We're crafting a new experience. The wait won't be long, and we promise it'll be worth your while.
+            </p>
+
+            <!-- Countdown -->
+            <section class="countdown-section" aria-label="Countdown timer">
+                <div class="countdown-label">Launching In</div>
+                <div class="countdown-display">
+                    <div class="countdown-item">
+                        <span class="countdown-value" id="days">00</span>
+                        <span class="countdown-unit">Days</span>
+                    </div>
+                    <span class="countdown-separator">:</span>
+                    <div class="countdown-item">
+                        <span class="countdown-value" id="hours">00</span>
+                        <span class="countdown-unit">Hours</span>
+                    </div>
+                    <span class="countdown-separator">:</span>
+                    <div class="countdown-item">
+                        <span class="countdown-value accent" id="minutes">00</span>
+                        <span class="countdown-unit">Minutes</span>
+                    </div>
+                    <span class="countdown-separator">:</span>
+                    <div class="countdown-item">
+                        <span class="countdown-value" id="seconds">00</span>
+                        <span class="countdown-unit">Seconds</span>
+                    </div>
+                </div>
             </section>
 
-            <!-- Countdown Timer -->
-            <section class="animate-slide-up" style="animation-delay: 0.2s">
-                <div class="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6">
-                    <!-- Days -->
-                    <div class="countdown-card group">
-                        <div class="text-3xl sm:text-4xl md:text-5xl font-display font-bold gradient-text" id="days">00</div>
-                        <div class="text-xs sm:text-sm text-muted-foreground uppercase tracking-widest mt-2">Days</div>
-                    </div>
-                    <!-- Hours -->
-                    <div class="countdown-card group">
-                        <div class="text-3xl sm:text-4xl md:text-5xl font-display font-bold gradient-text" id="hours">00</div>
-                        <div class="text-xs sm:text-sm text-muted-foreground uppercase tracking-widest mt-2">Hours</div>
-                    </div>
-                    <!-- Minutes -->
-                    <div class="countdown-card group">
-                        <div class="text-3xl sm:text-4xl md:text-5xl font-display font-bold gradient-text" id="minutes">00</div>
-                        <div class="text-xs sm:text-sm text-muted-foreground uppercase tracking-widest mt-2">Minutes</div>
-                    </div>
-                    <!-- Seconds -->
-                    <div class="countdown-card group">
-                        <div class="text-3xl sm:text-4xl md:text-5xl font-display font-bold gradient-text" id="seconds">00</div>
-                        <div class="text-xs sm:text-sm text-muted-foreground uppercase tracking-widest mt-2">Seconds</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Email Subscribe Form -->
-            <section class="animate-slide-up" style="animation-delay: 0.3s">
-                <div class="glass-card max-w-lg mx-auto p-6 sm:p-8">
-                    <h3 class="text-center font-semibold text-lg mb-6">Get Notified When We Launch</h3>
-                    <form id="subscribe-form" class="flex flex-col sm:flex-row gap-3">
-                        <div class="flex-1 relative">
-                            <input
-                                type="email"
-                                id="email-input"
-                                placeholder="Enter your email address"
-                                class="w-full px-5 py-3 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white placeholder:text-white/50 outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all"
-                            >
-                        </div>
-                        <button
-                            type="submit"
-                            class="btn-primary whitespace-nowrap relative overflow-hidden group"
+            <!-- Subscribe Form -->
+            <section class="subscribe-section">
+                <form class="subscribe-form" id="subscribe-form">
+                    <label class="subscribe-label" for="email-input">Get notified when we launch</label>
+                    <div class="input-group">
+                        <input
+                            type="email"
+                            id="email-input"
+                            class="email-input"
+                            placeholder="your@email.com"
+                            required
+                            aria-describedby="form-message"
                         >
-                            <span class="relative z-10 flex items-center gap-2">
-                                <span>Notify Me</span>
-                                <i class="fas fa-paper-plane text-sm group-hover:translate-x-1 transition-transform"></i>
-                            </span>
-                            <div class="absolute inset-0 bg-gradient-to-r from-accent to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <button type="submit" class="submit-btn">
+                            <span>Notify Me</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                            </svg>
                         </button>
-                    </form>
-                    <div id="form-message" class="hidden text-center mt-4 text-sm"></div>
-                </div>
+                    </div>
+                </form>
+                <div class="form-message" id="form-message" aria-live="polite"></div>
             </section>
+        </main>
 
-            <!-- Social Links -->
-            <footer class="animate-slide-up" style="animation-delay: 0.4s">
-                <div class="flex justify-center gap-4">
-                    <a href="#" class="social-btn" aria-label="Facebook">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" class="social-btn" aria-label="Twitter">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="social-btn" aria-label="Instagram">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="#" class="social-btn" aria-label="LinkedIn">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="#" class="social-btn" aria-label="GitHub">
-                        <i class="fab fa-github"></i>
-                    </a>
-                </div>
-                <p class="text-center text-muted-foreground text-sm mt-8">
-                    &copy; <span id="current-year"></span> All rights reserved.
-                </p>
-            </footer>
-        </div>
-    </main>
-
-    <!-- Loading Animation -->
-    <div id="loading-animation" class="fixed inset-0 bg-background z-50 flex items-center justify-center transition-opacity duration-500">
-        <div class="relative">
-            <div class="w-12 h-12 border-4 border-white/10 border-t-primary rounded-full animate-spin"></div>
-            <div class="absolute inset-0 w-12 h-12 border-4 border-transparent border-r-accent rounded-full animate-spin" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
-        </div>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="social-links">
+                <a href="#" class="social-link" aria-label="Twitter">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </a>
+                <a href="#" class="social-link" aria-label="GitHub">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
+                <a href="#" class="social-link" aria-label="LinkedIn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; <span id="current-year">2025</span> Varabit. All rights reserved.</span>
+                <span>Crafted with intention</span>
+            </div>
+        </footer>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

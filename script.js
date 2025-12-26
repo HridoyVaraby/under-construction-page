@@ -1,130 +1,66 @@
 /**
- * Under Construction Page - Main JavaScript
- * Features: Loading animation, particles.js, countdown timer, form handling
+ * Under Construction Page - JavaScript
+ * Features: Loading animation, countdown timer, form handling
+ * No external dependencies - pure vanilla JS
  */
 
-// ============================================
-// Loading Animation
-// ============================================
-document.addEventListener('DOMContentLoaded', () => {
-    const loadingAnimation = document.getElementById('loading-animation');
-
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            loadingAnimation.style.opacity = '0';
-            setTimeout(() => {
-                loadingAnimation.style.display = 'none';
-            }, 500);
-        }, 800);
-    });
-
-    // Set current year in footer
-    document.getElementById('current-year').textContent = new Date().getFullYear();
-});
+'use strict';
 
 // ============================================
-// Particle.js Configuration
+// MODULE: LOADING ANIMATION
 // ============================================
-document.addEventListener('DOMContentLoaded', () => {
-    if (typeof particlesJS !== 'undefined') {
-        particlesJS('particles-js', {
-            particles: {
-                number: {
-                    value: 60,
-                    density: {
-                        enable: true,
-                        value_area: 800
-                    }
-                },
-                color: {
-                    value: ['#5e72eb', '#ff77eb', '#ffffff']
-                },
-                shape: {
-                    type: 'circle'
-                },
-                opacity: {
-                    value: 0.6,
-                    random: true,
-                    anim: {
-                        enable: true,
-                        speed: 1,
-                        opacity_min: 0.2,
-                        sync: false
-                    }
-                },
-                size: {
-                    value: 3,
-                    random: true,
-                    anim: {
-                        enable: true,
-                        speed: 2,
-                        size_min: 0.1,
-                        sync: false
-                    }
-                },
-                line_linked: {
-                    enable: true,
-                    distance: 150,
-                    color: '#5e72eb',
-                    opacity: 0.3,
-                    width: 1
-                },
-                move: {
-                    enable: true,
-                    speed: 1,
-                    direction: 'none',
-                    random: true,
-                    out_mode: 'out'
-                }
-            },
-            interactivity: {
-                detect_on: 'canvas',
-                events: {
-                    onhover: {
-                        enable: true,
-                        mode: 'grab'
-                    },
-                    onclick: {
-                        enable: true,
-                        mode: 'push'
-                    },
-                    resize: true
-                },
-                modes: {
-                    grab: {
-                        distance: 140,
-                        line_linked: {
-                            opacity: 0.8
-                        }
-                    },
-                    push: {
-                        particles_nb: 4
-                    }
-                }
-            },
-            retina_detect: true
-        });
+const LoadingScreen = {
+    init() {
+        const loadingScreen = document.getElementById('loading-screen');
+
+        // Check for reduced motion preference
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (loadingScreen) {
+            const delay = prefersReducedMotion ? 100 : 800;
+
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    loadingScreen.classList.add('loaded');
+                }, delay);
+            });
+        }
     }
-});
+};
 
 // ============================================
-// Countdown Timer
+// MODULE: COUNTDOWN TIMER
 // ============================================
-document.addEventListener('DOMContentLoaded', () => {
+const CountdownTimer = {
     // Set countdown to 15 days from now
-    const countDownDate = new Date();
-    countDownDate.setDate(countDownDate.getDate() + 15);
+    targetDate: new Date(Date.now() + (15 * 24 * 60 * 60 * 1000)),
+    interval: null,
 
-    const elements = {
-        days: document.getElementById('days'),
-        hours: document.getElementById('hours'),
-        minutes: document.getElementById('minutes'),
-        seconds: document.getElementById('seconds')
-    };
+    elements: {
+        days: null,
+        hours: null,
+        minutes: null,
+        seconds: null
+    },
 
-    const countdownInterval = setInterval(() => {
+    init() {
+        // Cache DOM elements
+        this.elements.days = document.getElementById('days');
+        this.elements.hours = document.getElementById('hours');
+        this.elements.minutes = document.getElementById('minutes');
+        this.elements.seconds = document.getElementById('seconds');
+
+        // Exit if elements don't exist
+        if (!this.elements.days) return;
+
+        // Start the timer
+        this.update();
+        this.interval = setInterval(() => this.update(), 1000);
+    },
+
+    update() {
         const now = new Date().getTime();
-        const distance = countDownDate - now;
+        const distance = this.targetDate - now;
 
         // Calculate time components
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -133,142 +69,144 @@ document.addEventListener('DOMContentLoaded', () => {
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
         // Update display with leading zeros
-        elements.days.textContent = padZero(days);
-        elements.hours.textContent = padZero(hours);
-        elements.minutes.textContent = padZero(minutes);
-        elements.seconds.textContent = padZero(seconds);
+        this.elements.days.textContent = this.padZero(days);
+        this.elements.hours.textContent = this.padZero(hours);
+        this.elements.minutes.textContent = this.padZero(minutes);
+        this.elements.seconds.textContent = this.padZero(seconds);
 
-        // Reset countdown when it reaches zero
+        // Reset countdown when it reaches zero (auto-extend by 15 days)
         if (distance < 0) {
-            countDownDate.setDate(countDownDate.getDate() + 15);
+            this.targetDate.setDate(this.targetDate.getDate() + 15);
         }
-    }, 1000);
+    },
 
-    function padZero(num) {
+    padZero(num) {
         return num.toString().padStart(2, '0');
     }
-});
+};
 
 // ============================================
-// Email Subscribe Form
+// MODULE: EMAIL SUBSCRIBE FORM
 // ============================================
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('subscribe-form');
-    const emailInput = document.getElementById('email-input');
-    const formMessage = document.getElementById('form-message');
+const SubscribeForm = {
+    elements: {
+        form: null,
+        input: null,
+        button: null,
+        message: null
+    },
 
-    form.addEventListener('submit', (e) => {
+    originalButtonText: '',
+
+    init() {
+        // Cache DOM elements
+        this.elements.form = document.getElementById('subscribe-form');
+        this.elements.input = document.getElementById('email-input');
+        this.elements.message = document.getElementById('form-message');
+
+        if (!this.elements.form) return;
+
+        this.elements.button = this.elements.form.querySelector('button[type="submit"]');
+        this.originalButtonText = this.elements.button.innerHTML;
+
+        // Bind submit handler
+        this.elements.form.addEventListener('submit', (e) => this.handleSubmit(e));
+    },
+
+    handleSubmit(e) {
         e.preventDefault();
 
-        const email = emailInput.value.trim();
+        const email = this.elements.input.value.trim();
 
         // Validate email
-        if (!email || !isValidEmail(email)) {
-            shakeInput(emailInput);
-            showMessage('Please enter a valid email address', 'error');
+        if (!this.isValidEmail(email)) {
+            this.showError('Please enter a valid email address');
+            this.shakeInput();
             return;
         }
 
-        // Simulate success
-        showMessage('Thank you! We\'ll notify you when we launch.', 'success');
+        // Simulate success (no backend)
+        this.showSuccess('Thank you! We\'ll notify you when we launch.');
+        this.elements.input.value = '';
+        this.setButtonState('success');
 
-        // Clear input
-        emailInput.value = '';
-
-        // Disable form temporarily
-        const button = form.querySelector('button');
-        button.disabled = true;
-        button.innerHTML = '<i class="fas fa-check"></i> <span>Subscribed!</span>';
-
+        // Reset form after 3 seconds
         setTimeout(() => {
-            button.disabled = false;
-            button.innerHTML = `<span class="relative z-10 flex items-center gap-2">
-                <span>Notify Me</span>
-                <i class="fas fa-paper-plane text-sm group-hover:translate-x-1 transition-transform"></i>
-            </span>
-            <div class="absolute inset-0 bg-gradient-to-r from-accent to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>`;
-            formMessage.classList.add('hidden');
+            this.hideMessage();
+            this.setButtonState('default');
         }, 3000);
-    });
+    },
 
-    function isValidEmail(email) {
+    isValidEmail(email) {
+        // Simple but effective email regex
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
-    }
+    },
 
-    function shakeInput(input) {
-        input.style.animation = 'none';
-        input.offsetHeight; // Trigger reflow
-        input.style.animation = 'shake 0.5s ease-in-out';
-        input.focus();
-    }
+    showMessage(text, type) {
+        this.elements.message.textContent = text;
+        this.elements.message.className = `form-message ${type}`;
+    },
 
-    function showMessage(message, type) {
-        formMessage.textContent = message;
-        formMessage.className = 'text-center mt-4 text-sm animate-fade-in';
+    showError(text) {
+        this.showMessage(text, 'error');
+    },
 
-        if (type === 'error') {
-            formMessage.classList.add('text-red-400');
+    showSuccess(text) {
+        this.showMessage(text, 'success');
+    },
+
+    hideMessage() {
+        this.elements.message.className = 'form-message';
+        this.elements.message.textContent = '';
+    },
+
+    shakeInput() {
+        this.elements.input.classList.add('error');
+
+        // Remove class after animation completes
+        setTimeout(() => {
+            this.elements.input.classList.remove('error');
+        }, 500);
+
+        // Refocus the input
+        this.elements.input.focus();
+    },
+
+    setButtonState(state) {
+        if (state === 'success') {
+            this.elements.button.disabled = true;
+            this.elements.button.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <path d="M20 6L9 17l-5-5"/>
+                </svg>
+                <span>Subscribed!</span>
+            `;
         } else {
-            formMessage.classList.add('text-primary');
+            this.elements.button.disabled = false;
+            this.elements.button.innerHTML = this.originalButtonText;
         }
-
-        formMessage.classList.remove('hidden');
     }
+};
+
+// ============================================
+// MODULE: FOOTER YEAR
+// ============================================
+const FooterYear = {
+    init() {
+        const yearElement = document.getElementById('current-year');
+        if (yearElement) {
+            yearElement.textContent = new Date().getFullYear();
+        }
+    }
+};
+
+// ============================================
+// INITIALIZATION
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+    LoadingScreen.init();
+    CountdownTimer.init();
+    SubscribeForm.init();
+    FooterYear.init();
 });
-
-// ============================================
-// Shake Animation Keyframes
-// ============================================
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
-        20%, 40%, 60%, 80% { transform: translateX(4px); }
-    }
-
-    /* Enhanced animations for countdown cards */
-    .countdown-card {
-        animation: slideUp 0.5s ease-out backwards;
-    }
-
-    .countdown-card:nth-child(1) { animation-delay: 0.1s; }
-    .countdown-card:nth-child(2) { animation-delay: 0.2s; }
-    .countdown-card:nth-child(3) { animation-delay: 0.3s; }
-    .countdown-card:nth-child(4) { animation-delay: 0.4s; }
-
-    /* Gradient animation for highlight text */
-    .gradient-text::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background: linear-gradient(90deg, hsl(250, 70%, 60%) 0%, hsl(330, 80%, 70%) 100%);
-        transform: scaleX(0);
-        transform-origin: bottom right;
-        transition: transform 0.5s ease-out;
-        animation: underlineAnimation 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes underlineAnimation {
-        from { transform: scaleX(0.3); transform-origin: bottom left; }
-        to { transform: scaleX(1); transform-origin: bottom right; }
-    }
-
-    /* Mobile optimizations */
-    @media (max-width: 768px) {
-        body {
-            overflow-y: auto;
-        }
-
-        main {
-            min-height: auto;
-            padding-top: 2rem;
-            padding-bottom: 2rem;
-        }
-    }
-`;
-document.head.appendChild(style);
