@@ -31,8 +31,7 @@ const LoadingScreen = {
 // MODULE: COUNTDOWN TIMER
 // ============================================
 const CountdownTimer = {
-    // Set countdown to 15 days from now
-    targetDate: new Date(Date.now() + (15 * 24 * 60 * 60 * 1000)),
+    targetDate: null,
     interval: null,
     previousValues: {
         days: '',
@@ -58,9 +57,33 @@ const CountdownTimer = {
         // Exit if elements don't exist
         if (!this.elements.days) return;
 
+        // Set target date from config or use default
+        this.setTargetDate();
+
         // Start the timer
         this.update();
         this.interval = setInterval(() => this.update(), 1000);
+    },
+
+    setTargetDate() {
+        // Check for launch date in config
+        const config = window.SITE_CONFIG || {};
+        const countdownConfig = config.countdown || {};
+
+        if (countdownConfig.launchDate) {
+            // Use specific launch date from config
+            this.targetDate = new Date(countdownConfig.launchDate);
+
+            // If date is in the past, extend by initialDays
+            if (this.targetDate.getTime() < Date.now()) {
+                const days = countdownConfig.initialDays || 15;
+                this.targetDate = new Date(Date.now() + (days * 24 * 60 * 60 * 1000));
+            }
+        } else {
+            // Fall back to initialDays from now
+            const days = countdownConfig.initialDays || 15;
+            this.targetDate = new Date(Date.now() + (days * 24 * 60 * 60 * 1000));
+        }
     },
 
     update() {
@@ -79,9 +102,11 @@ const CountdownTimer = {
         this.updateElement('minutes', minutes);
         this.updateElement('seconds', seconds);
 
-        // Reset countdown when it reaches zero (auto-extend by 15 days)
+        // Reset countdown when it reaches zero (auto-extend by initialDays from config)
         if (distance < 0) {
-            this.targetDate.setDate(this.targetDate.getDate() + 15);
+            const config = window.SITE_CONFIG || {};
+            const days = (config.countdown && config.countdown.initialDays) || 15;
+            this.targetDate.setDate(this.targetDate.getDate() + days);
         }
     },
 

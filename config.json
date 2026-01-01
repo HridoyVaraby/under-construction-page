@@ -1,0 +1,45 @@
+{
+  "company": {
+    "name": "VARABIT",
+    "tagline": "Crafted with intention"
+  },
+  "logo": {
+    "type": "svg",
+    "image": "",
+    "alt": "VARABIT Logo"
+  },
+  "page": {
+    "title": "Something Remarkable is Coming",
+    "description": "We're building something remarkable. Stay tuned for VARABIT's launch.",
+    "metaTitle": "Something Remarkable is Coming | VARABIT",
+    "metaDescription": "We're building something remarkable. Stay tuned for VARABIT's launch."
+  },
+  "hero": {
+    "eyebrow": "Launching 2025",
+    "title": ["Some", "thing", "Remarkable"],
+    "accentWord": 1,
+    "description": "We're engineering a new experience that will redefine expectations. The wait won't be long—and we promise it'll be worth it."
+  },
+  "branding": {
+    "accentColor": "#0DFFD7",
+    "accentHover": "#00E5C0",
+    "accentGlow": "rgba(13, 255, 215, 0.25)",
+    "accentDim": "rgba(13, 255, 215, 0.12)"
+  },
+  "countdown": {
+    "label": "Launching In",
+    "launchDate": "2025-06-01T12:00:00",
+    "initialDays": 15
+  },
+  "subscribe": {
+    "title": "Be the first to know",
+    "description": "Drop your email and we'll notify you the moment we launch.",
+    "buttonText": "Notify Me",
+    "placeholder": "your@email.com"
+  },
+  "social": {
+    "twitter": "#",
+    "github": "#",
+    "linkedin": "#"
+  }
+}
