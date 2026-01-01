@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Configuration | Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0B0B0F;
+            --bg-secondary: #16161D;
+            --bg-elevated: #1E1E26;
+            --text-primary: #F4F4F5;
+            --text-secondary: #71717A;
+            --accent: #0DFFD7;
+            --accent-hover: #00E5C0;
+            --border: #2A2A35;
+            --danger: #EF4444;
+            --success: #22C55E;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header h1::before {
+            content: '⚙️';
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        input[type="text"],
+        input[type="url"],
+        input[type="color"],
+        input[type="number"],
+        textarea,
+        select {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            font-size: 0.9375rem;
+            font-family: inherit;
+            transition: border-color 0.15s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        input[type="color"] {
+            height: 44px;
+            padding: 0.25rem;
+            cursor: pointer;
+        }
+
+        .color-presets {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .color-preset {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.15s;
+        }
+
+        .color-preset:hover {
+            transform: scale(1.1);
+        }
+
+        .color-preset.active {
+            border-color: var(--text-primary);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent);
+        }
+
+        .file-upload {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .file-upload:hover {
+            border-color: var(--accent);
+            background: rgba(13, 255, 215, 0.05);
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .file-upload-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .file-upload-text {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .preview-logo {
+            max-width: 150px;
+            max-height: 80px;
+            object-fit: contain;
+            margin-top: 1rem;
+            border-radius: 8px;
+            background: var(--bg-elevated);
+            padding: 0.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #16A34A;
+        }
+
+        .actions {
+            position: sticky;
+            bottom: 0;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .save-status {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .save-status.success {
+            color: var(--success);
+        }
+
+        .save-status.error {
+            color: var(--danger);
+        }
+
+        .hero-title-inputs {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .hero-title-inputs input {
+            flex: 1;
+            text-align: center;
+        }
+
+        .accent-toggle {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .accent-toggle.active {
+            background: var(--accent);
+            color: var(--bg-primary);
+            border-color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 1rem;
+            }
+            .actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Configuration Panel</h1>
+        <div class="header-actions">
+            <a href="/" class="btn btn-secondary" target="_blank">Preview Site</a>
+        </div>
+    </header>
+
+    <form id="config-form">
+        <div class="container">
+            <!-- Company Section -->
+            <section class="section">
+                <h2 class="section-title">Company Information</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="company-name">Company Name</label>
+                        <input type="text" id="company-name" name="company.name" placeholder="VARABIT">
+                    </div>
+                    <div class="form-group">
+                        <label for="company-tagline">Tagline</label>
+                        <input type="text" id="company-tagline" name="company.tagline" placeholder="Crafted with intention">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Logo Section -->
+            <section class="section">
+                <h2 class="section-title">Logo</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="use-custom-logo">
+                            Use custom logo image
+                        </label>
+                    </div>
+                </div>
+                <div id="logo-upload-section" class="hidden" style="margin-top: 1rem;">
+                    <label class="file-upload">
+                        <input type="file" id="logo-file" accept="image/png,image/jpeg,image/svg+xml,image/webp">
+                        <div class="file-upload-icon">📁</div>
+                        <div class="file-upload-text">Click to upload logo (PNG, SVG, WebP)</div>
+                    </label>
+                    <img id="logo-preview" class="preview-logo hidden" alt="Logo preview">
+                    <input type="hidden" id="logo-path" name="logo.image">
+                </div>
+            </section>
+
+            <!-- Page Meta Section -->
+            <section class="section">
+                <h2 class="section-title">Page Meta</h2>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="page-title">Page Title (shown in browser tab)</label>
+                        <input type="text" id="page-title" name="page.metaTitle" placeholder="Something Remarkable is Coming | VARABIT">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="page-description">Meta Description (SEO)</label>
+                        <textarea id="page-description" name="page.metaDescription" rows="2" placeholder="We're building something remarkable..."></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Hero Section -->
+            <section class="section">
+                <h2 class="section-title">Hero Section</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="hero-eyebrow">Eyebrow Text</label>
+                        <input type="text" id="hero-eyebrow" name="hero.eyebrow" placeholder="Launching 2025">
+                    </div>
+                    <div class="form-group">
+                        <label>Hero Title (3 words - click to accent)</label>
+                        <div class="hero-title-inputs">
+                            <input type="text" id="hero-title-0" placeholder="Some" maxlength="15">
+                            <input type="text" id="hero-title-1" placeholder="thing" maxlength="15">
+                            <input type="text" id="hero-title-2" placeholder="Remarkable" maxlength="15">
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="hero-description">Description</label>
+                        <textarea id="hero-description" name="hero.description" rows="3" placeholder="We're engineering a new experience..."></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Branding Section -->
+            <section class="section">
+                <h2 class="section-title">Branding Colors</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="accent-color">Accent Color</label>
+                        <input type="color" id="accent-color" name="branding.accentColor" value="#0DFFD7">
+                    </div>
+                    <div class="form-group">
+                        <label>Quick Presets</label>
+                        <div class="color-presets">
+                            <div class="color-preset" style="background: #0DFFD7" data-color="#0DFFD7"></div>
+                            <div class="color-preset" style="background: #FF4F00" data-color="#FF4F00"></div>
+                            <div class="color-preset" style="background: #B537F2" data-color="#B537F2"></div>
+                            <div class="color-preset" style="background: #CCFF00" data-color="#CCFF00"></div>
+                            <div class="color-preset" style="background: #FF0080" data-color="#FF0080"></div>
+                            <div class="color-preset" style="background: #0066FF" data-color="#0066FF"></div>
+                            <div class="color-preset" style="background: #F59E0B" data-color="#F59E0B"></div>
+                            <div class="color-preset" style="background: #10B981" data-color="#10B981"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Countdown Section -->
+            <section class="section">
+                <h2 class="section-title">Countdown Timer</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="countdown-label">Label</label>
+                        <input type="text" id="countdown-label" name="countdown.label" placeholder="Launching In">
+                    </div>
+                    <div class="form-group">
+                        <label for="countdown-days">Initial Days</label>
+                        <input type="number" id="countdown-days" name="countdown.initialDays" min="1" max="365" value="15">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Subscribe Section -->
+            <section class="section">
+                <h2 class="section-title">Subscribe Form</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="subscribe-title">Title</label>
+                        <input type="text" id="subscribe-title" name="subscribe.title" placeholder="Be the first to know">
+                    </div>
+                    <div class="form-group">
+                        <label for="subscribe-button">Button Text</label>
+                        <input type="text" id="subscribe-button" name="subscribe.buttonText" placeholder="Notify Me">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="subscribe-description">Description</label>
+                        <textarea id="subscribe-description" name="subscribe.description" rows="2" placeholder="Drop your email..."></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Social Links Section -->
+            <section class="section">
+                <h2 class="section-title">Social Links</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="social-twitter">Twitter URL</label>
+                        <input type="url" id="social-twitter" name="social.twitter" placeholder="https://twitter.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label for="social-github">GitHub URL</label>
+                        <input type="url" id="social-github" name="social.github" placeholder="https://github.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label for="social-linkedin">LinkedIn URL</label>
+                        <input type="url" id="social-linkedin" name="social.linkedin" placeholder="https://linkedin.com/...">
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Actions Bar -->
+        <div class="actions">
+            <div class="save-status" id="save-status">All changes saved locally</div>
+            <div style="display: flex; gap: 1rem;">
+                <button type="button" class="btn btn-secondary" id="export-btn">Download Config</button>
+                <button type="submit" class="btn btn-success" id="save-btn">Save Configuration</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        let currentConfig = {};
+        let accentWordIndex = 1;
+
+        // Load config from API
+        async function loadConfig() {
+            try {
+                const response = await fetch('/api/config');
+                currentConfig = await response.json();
+                populateForm(currentConfig);
+                updateAccentWordButtons();
+            } catch (err) {
+                console.error('Failed to load config:', err);
+                showStatus('Failed to load configuration', 'error');
+            }
+        }
+
+        // Populate form with config values
+        function populateForm(config) {
+            // Company
+            if (config.company?.name) document.getElementById('company-name').value = config.company.name;
+            if (config.company?.tagline) document.getElementById('company-tagline').value = config.company.tagline;
+
+            // Logo
+            if (config.logo?.type === 'image') {
+                document.getElementById('use-custom-logo').checked = true;
+                document.getElementById('logo-upload-section').classList.remove('hidden');
+                if (config.logo.image) {
+                    document.getElementById('logo-path').value = config.logo.image;
+                    document.getElementById('logo-preview').src = config.logo.image;
+                    document.getElementById('logo-preview').classList.remove('hidden');
+                }
+            }
+
+            // Page Meta
+            if (config.page?.metaTitle) document.getElementById('page-title').value = config.page.metaTitle;
+            if (config.page?.metaDescription) document.getElementById('page-description').value = config.page.metaDescription;
+
+            // Hero
+            if (config.hero?.eyebrow) document.getElementById('hero-eyebrow').value = config.hero.eyebrow;
+            if (config.hero?.title && Array.isArray(config.hero.title)) {
+                config.hero.title.forEach((word, i) => {
+                    const input = document.getElementById(`hero-title-${i}`);
+                    if (input) input.value = word;
+                });
+            }
+            if (config.hero?.accentWord !== undefined) accentWordIndex = config.hero.accentWord;
+            if (config.hero?.description) document.getElementById('hero-description').value = config.hero.description;
+
+            // Branding
+            if (config.branding?.accentColor) {
+                document.getElementById('accent-color').value = config.branding.accentColor;
+                updateColorPreset(config.branding.accentColor);
+            }
+
+            // Countdown
+            if (config.countdown?.label) document.getElementById('countdown-label').value = config.countdown.label;
+            if (config.countdown?.initialDays) document.getElementById('countdown-days').value = config.countdown.initialDays;
+
+            // Subscribe
+            if (config.subscribe?.title) document.getElementById('subscribe-title').value = config.subscribe.title;
+            if (config.subscribe?.buttonText) document.getElementById('subscribe-button').value = config.subscribe.buttonText;
+            if (config.subscribe?.description) document.getElementById('subscribe-description').value = config.subscribe.description;
+
+            // Social
+            if (config.social?.twitter) document.getElementById('social-twitter').value = config.social.twitter;
+            if (config.social?.github) document.getElementById('social-github').value = config.social.github;
+            if (config.social?.linkedin) document.getElementById('social-linkedin').value = config.social.linkedin;
+        }
+
+        // Build config object from form
+        function getConfigFromForm() {
+            const config = {
+                company: {
+                    name: document.getElementById('company-name').value || 'VARABIT',
+                    tagline: document.getElementById('company-tagline').value || 'Crafted with intention'
+                },
+                logo: {
+                    type: document.getElementById('use-custom-logo').checked ? 'image' : 'svg',
+                    image: document.getElementById('logo-path').value || '',
+                    alt: `${document.getElementById('company-name').value || 'Company'} Logo`
+                },
+                page: {
+                    title: document.getElementById('page-title').value?.split('|')[0]?.trim() || 'Something Remarkable is Coming',
+                    description: document.getElementById('page-description').value || '',
+                    metaTitle: document.getElementById('page-title').value || 'Something Remarkable is Coming',
+                    metaDescription: document.getElementById('page-description').value || ''
+                },
+                hero: {
+                    eyebrow: document.getElementById('hero-eyebrow').value || 'Launching 2025',
+                    title: [
+                        document.getElementById('hero-title-0').value || 'Some',
+                        document.getElementById('hero-title-1').value || 'thing',
+                        document.getElementById('hero-title-2').value || 'Remarkable'
+                    ],
+                    accentWord: accentWordIndex,
+                    description: document.getElementById('hero-description').value || ''
+                },
+                branding: {
+                    accentColor: document.getElementById('accent-color').value,
+                    accentHover: document.getElementById('accent-color').value,
+                    accentGlow: hexToRgba(document.getElementById('accent-color').value, 0.25),
+                    accentDim: hexToRgba(document.getElementById('accent-color').value, 0.12)
+                },
+                countdown: {
+                    label: document.getElementById('countdown-label').value || 'Launching In',
+                    initialDays: parseInt(document.getElementById('countdown-days').value) || 15
+                },
+                subscribe: {
+                    title: document.getElementById('subscribe-title').value || 'Be the first to know',
+                    description: document.getElementById('subscribe-description').value || '',
+                    buttonText: document.getElementById('subscribe-button').value || 'Notify Me',
+                    placeholder: 'your@email.com'
+                },
+                social: {
+                    twitter: document.getElementById('social-twitter').value || '#',
+                    github: document.getElementById('social-github').value || '#',
+                    linkedin: document.getElementById('social-linkedin').value || '#'
+                }
+            };
+            return config;
+        }
+
+        // Convert hex to rgba
+        function hexToRgba(hex, alpha) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+        // Update color preset active state
+        function updateColorPreset(color) {
+            document.querySelectorAll('.color-preset').forEach(el => {
+                el.classList.toggle('active', el.dataset.color.toLowerCase() === color.toLowerCase());
+            });
+        }
+
+        // Update accent word toggle buttons
+        function updateAccentWordButtons() {
+            // We'll add visual indication for the accent word
+            // This could be enhanced with a toggle button for each input
+        }
+
+        // Show status message
+        function showStatus(message, type = '') {
+            const status = document.getElementById('save-status');
+            status.textContent = message;
+            status.className = 'save-status ' + type;
+            setTimeout(() => {
+                status.textContent = 'All changes saved locally';
+                status.className = 'save-status';
+            }, 3000);
+        }
+
+        // Handle logo file upload
+        async function handleLogoUpload(file) {
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('logo-path').value = result.path;
+                    document.getElementById('logo-preview').src = result.path;
+                    document.getElementById('logo-preview').classList.remove('hidden');
+                    showStatus('Logo uploaded successfully', 'success');
+                } else {
+                    showStatus('Failed to upload logo: ' + (result.error || 'Unknown error'), 'error');
+                }
+            } catch (err) {
+                showStatus('Failed to upload logo', 'error');
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            loadConfig();
+
+            // Custom logo toggle
+            document.getElementById('use-custom-logo').addEventListener('change', (e) => {
+                const section = document.getElementById('logo-upload-section');
+                if (e.target.checked) {
+                    section.classList.remove('hidden');
+                } else {
+                    section.classList.add('hidden');
+                }
+            });
+
+            // Logo file input
+            document.getElementById('logo-file').addEventListener('change', (e) => {
+                if (e.target.files[0]) {
+                    handleLogoUpload(e.target.files[0]);
+                }
+            });
+
+            // File upload click
+            document.querySelector('.file-upload').addEventListener('click', (e) => {
+                if (e.target.tagName !== 'INPUT') {
+                    document.getElementById('logo-file').click();
+                }
+            });
+
+            // Color presets
+            document.querySelectorAll('.color-preset').forEach(el => {
+                el.addEventListener('click', () => {
+                    const color = el.dataset.color;
+                    document.getElementById('accent-color').value = color;
+                    updateColorPreset(color);
+                });
+            });
+
+            // Color input change
+            document.getElementById('accent-color').addEventListener('input', (e) => {
+                updateColorPreset(e.target.value);
+            });
+
+            // Hero title inputs - click to set accent word
+            document.querySelectorAll('.hero-title-inputs input').forEach((input, index) => {
+                input.addEventListener('click', () => {
+                    accentWordIndex = index;
+                });
+            });
+
+            // Form submission
+            document.getElementById('config-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const config = getConfigFromForm();
+
+                try {
+                    const response = await fetch('/api/config', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(config)
+                    });
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showStatus('Configuration saved successfully!', 'success');
+                    } else {
+                        showStatus('Failed to save: ' + (result.error || 'Unknown error'), 'error');
+                    }
+                } catch (err) {
+                    showStatus('Failed to save configuration', 'error');
+                }
+            });
+
+            // Export button
+            document.getElementById('export-btn').addEventListener('click', () => {
+                const config = getConfigFromForm();
+                const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'config.json';
+                a.click();
+                URL.revokeObjectURL(url);
+                showStatus('Config file downloaded', 'success');
+            });
+
+            // Auto-update company name in logo path when changed
+            document.getElementById('company-name').addEventListener('input', (e) => {
+                const companyName = e.target.value || 'Company';
+                currentConfig.logo.alt = `${companyName} Logo`;
+            });
+        });
+    </script>
+</body>
+</html>

@@ -5,7 +5,10 @@
   "main": "script.js",
   "scripts": {
     "dev": "tailwindcss -i ./src/input.css -o ./styles.css --watch",
-    "build": "tailwindcss -i ./src/input.css -o ./styles.css --minify"
+    "build": "tailwindcss -i ./src/input.css -o ./styles.css --minify",
+    "configure": "node scripts/configure.js",
+    "admin": "node server.js",
+    "serve": "node server.js"
   },
   "repository": {
     "type": "git",
